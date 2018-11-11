@@ -1,0 +1,216 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Pastel de Vainilla ",
+      "price": "1000",
+      "ingredients": [
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Pan",
+      "price": 30,
+      "ingredients": [
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pastel de Zanahoria",
+      "price": "45",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Pastel de Chocolate",
+      "price": "60",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Pastel de Fresa",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 3,
+          "name": "Fresa",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "id":11,
+      "name": "Pastel de Banano",
+      "price": "40",
+      "ingredients": [
+        {
+          "id": 1,
+          "name": "Azucar",
+          "qty": 10
+        },
+        {
+          "id": 2,
+          "name": "Harina",
+          "qty": 20
+        },
+        {
+          "id": 4,
+          "name": "Banano",
+          "qty": 2
+        }
+      ]
+    }
+  ]
+}
