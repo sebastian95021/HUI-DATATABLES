@@ -4,11 +4,16 @@
       "id": 1,
       "name": "Pastel de Vainilla ",
       "price": "1000",
-      "ingredients": [
+      "children": [
         {
           "id": 2,
           "name": "Harina",
           "qty": 20
+        },
+        {
+          "id": 10,
+          "name": "Nueces",
+          "qty": 15
         }
       ]
     },
@@ -16,11 +21,16 @@
       "id": 2,
       "name": "Pan",
       "price": 30,
-      "ingredients": [
+      "children": [
         {
           "id": 2,
           "name": "Harina",
           "qty": 20
+        },
+        {
+          "id": 11,
+          "name": "Levadura",
+          "qty": 25
         }
       ]
     },
@@ -28,7 +38,7 @@
       "id": 3,
       "name": "Pastel de Zanahoria",
       "price": "45",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -45,7 +55,7 @@
       "id": 4,
       "name": "Pastel de Chocolate",
       "price": "60",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -62,7 +72,7 @@
       "id": 5,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -84,7 +94,7 @@
       "id": 6,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -106,7 +116,7 @@
       "id": 7,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -128,7 +138,7 @@
       "id": 8,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -150,7 +160,7 @@
       "id": 9,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -172,7 +182,7 @@
       "id": 10,
       "name": "Pastel de Fresa",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",
@@ -194,7 +204,7 @@
       "id":11,
       "name": "Pastel de Banano",
       "price": "40",
-      "ingredients": [
+      "children": [
         {
           "id": 1,
           "name": "Azucar",

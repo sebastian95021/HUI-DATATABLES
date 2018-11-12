@@ -37,40 +37,38 @@ class Product extends Component {
     }
 
     render() {
-        const { id, name, price, ingredients } = this.props.product;
+        const { indexColumn, columns, rowData } = this.props;
         const classes = this.props.classes;
-        const rowspan = ingredients.length;
+        const rowspan = rowData.children.length;
 
         return (
             <React.Fragment>
-                {ingredients.map((ingredient,index) => {
-                    if (index === 0){
-                        return (
-                            <CustomTableRow key={id}>
-                                <TableCell rowSpan={rowspan} numeric>{id}</TableCell>
-                                <TableCell rowSpan={rowspan}>{name}</TableCell>
-                                <TableCell rowSpan={rowspan} numeric>{price}</TableCell>
-                                <TableCell>{ingredient.name}</TableCell>
-                                <TableCell>{ingredient.qty}</TableCell>
-                                <TableCell rowSpan={rowspan}>
-                                    <IconButton component={Link} to={`/edit/${id}`} variant="fab" color="secondary" aria-label="Edit" className={classes.button}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton onClick={this.deleteProduct} variant="fab" aria-label="Delete" className={classes.button}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </CustomTableRow>
-                        );
-                    }else{
-                        return (
-                            <CustomTableRow key={ingredient.id}>
-                                <TableCell>{ingredient.name}</TableCell>
-                                <TableCell>{ingredient.qty}</TableCell>
-                            </CustomTableRow>
-                        );
-                    }
-                })}
+                <CustomTableRow>
+                    {Object.keys(rowData).map((key,i) => {
+                        if (key !== "children")
+                            return (<TableCell rowSpan={rowspan} key={i}>{rowData[key]}</TableCell>)
+                        else{
+                            return (
+                                <React.Fragment key={i}>
+                                    {rowData[key].map((rowChildren,index) => (
+                                        Object.keys(rowChildren).map((keyChildren,j) => {
+                                            if (keyChildren === "id") return;
+                                            if (index === 0){
+                                                return (<TableCell key={j}>{rowChildren[keyChildren]}</TableCell>)
+                                            }else{
+                                                return (
+                                                    <CustomTableRow key={j}>
+                                                        <TableCell>{rowChildren[keyChildren]}</TableCell>
+                                                    </CustomTableRow>
+                                                )
+                                            }
+                                        })
+                                    ))}
+                                </React.Fragment>
+                            )
+                        }
+                    })}
+                </CustomTableRow>
             </React.Fragment>
         );
     }

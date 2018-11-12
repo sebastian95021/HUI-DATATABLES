@@ -5,6 +5,7 @@ import Product from './Product';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
+import Popover from '@material-ui/core/Popover';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -18,6 +19,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ClearIcon from "@material-ui/icons/Clear";
+import Checkbox from "@material-ui/core/Checkbox";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -33,6 +39,37 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
     },
+    rootForm: {
+        padding: "16px 24px 16px 24px",
+        fontFamily: "Roboto",
+    },
+    title: {
+        marginLeft: "-7px",
+        fontSize: "14px",
+        color: "#424242",
+        textAlign: "left",
+        fontWeight: 500,
+    },
+    formGroup: {
+        marginTop: "8px",
+    },
+    formControl: {},
+    checkbox: {
+        padding: "0px",
+        width: "32px",
+        height: "32px",
+    },
+    checkboxRoot: {
+        "&$checked": {
+            color: "#027cb5",
+        },
+    },
+    checked: {},
+    label: {
+        fontSize: "15px",
+        marginLeft: "8px",
+        color: "#4a4a4a",
+    },
     paper: {
       padding: theme.spacing.unit * 2,
       textAlign: 'center',
@@ -47,17 +84,20 @@ const styles = theme => ({
         display: "flex",
         flex: "1 0 auto",
     },
-        searchIcon: {
+    searchIcon: {
         marginTop: "10px",
         marginRight: "8px",
     },
-        searchText: {
+    searchText: {
         flex: "0.8 0",
     },
     clearIcon: {
         "&:hover": {
             color: "#FF0000",
         },
+    },
+    typography: {
+        margin: theme.spacing.unit * 2,
     },
 });
 
@@ -74,7 +114,9 @@ class HUIDataTable extends Component {
         displayData: [],
         showSearch: false,
         generalSearchValue: null,
-        rowsCount:0
+        rowsCount:0,
+        columns: [],
+        anchorEl: null
     }
 
     componentDidMount() {
@@ -93,7 +135,7 @@ class HUIDataTable extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.data !== prevProps.data) {
-            const { data } = this.props;
+            const { data, columns } = this.props;
     
             //Total Rows
             const rowsCount = data.length;
@@ -102,7 +144,7 @@ class HUIDataTable extends Component {
             const displayData = data.slice(0,this.state.rowsPerPage);
 
             //Set state initialize
-            this.setState({ data, displayData, rowsCount});
+            this.setState({ data, displayData, rowsCount, columns});
         }
     }
 
@@ -171,79 +213,138 @@ class HUIDataTable extends Component {
         this.setState({generalSearchValue: value});
     }
 
+    handleClickViewColumns = event => {
+        this.setState({
+          anchorEl: event.currentTarget,
+        });
+    };
+
+    handleCloseViewColumns = () => {
+        this.setState({
+            anchorEl: null,
+        });
+    };
+
+    handleColChange = index => event => {
+        let columns = Object.assign(this.state.columns);
+        columns[index].display = event.target.checked;
+        this.setState({ columns });
+    }
+
     render() {
         const { classes, title } = this.props;
         
         const {
             displayData,
             showSearch,
+            columns,
+            anchorEl
         } = this.state;
+
+        const open = Boolean(anchorEl);
 
         return (
             <Grid item xs={12}>
                 <Grid container spacing={16} justify="center">
                     <Grid item xs={10}>
                         <Paper className={classes.paper}>
+                            <div className={classes.root}>
+                                <Grid container spacing={24}>
+                                    <Grid item xs={9}>
+                                        {showSearch === true ? (
+                                            <div className={classes.main}>
+                                                <SearchIcon className={classes.searchIcon} />
+                                                <TextField
+                                                    className={classes.searchText}
+                                                    autoFocus={true}
+                                                    onChange={this.handleSearchTextChange}
+                                                    fullWidth={true}
+                                                />
+                                                <IconButton className={classes.clearIcon} onClick={this.hideSearch}>
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            </div>
+                                        ) : (<p>{title}</p>)}
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        <IconButton variant="fab" aria-label="search" onClick={this.showSearchInput} className={classes.button}>
+                                            <SearchIcon />
+                                        </IconButton>
+                                        <IconButton variant="fab" aria-label="download" className={classes.button}>
+                                            <CloudDownloadIcon />
+                                        </IconButton>
+                                        <IconButton aria-owns={open ? 'simple-popper' : undefined} aria-haspopup="true" variant="fab" aria-label="viewcolumns" onClick={this.handleClickViewColumns} className={classes.button}>
+                                            <ViewColumnIcon />
+                                        </IconButton>
+                                        <Popover
+                                            id="simple-popper"
+                                            open={open}
+                                            anchorEl={anchorEl}
+                                            onClose={this.handleCloseViewColumns}
+                                            anchorOrigin={{
+                                                vertical: 'bottom',
+                                                horizontal: 'center',
+                                            }}
+                                            transformOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'center',
+                                            }}
+                                            >
+<FormControl component={"fieldset"} className={classes.rootForm} aria-label="formViewColumns">
+        <Typography variant="caption" className={classes.title}>Ver Columnas</Typography>
+        <FormGroup className={classes.formGroup}>
+          {columns.map((column, index) => (
+                <FormControlLabel
+                  key={index}
+                  classes={{
+                    root: classes.formControl,
+                    label: classes.label,
+                  }}
+                  control={
+                    <Checkbox
+                      className={classes.checkbox}
+                      classes={{
+                        root: classes.checkboxRoot,
+                        checked: classes.checked,
+                      }}
+                      onChange={this.handleColChange(index)}
+                      checked={column.display}
+                      value={column.name}
+                    />
+                  }
+                  label={column.name}
+                />
+            ))
+          }
+        </FormGroup>
+      </FormControl>
+                                        </Popover>
 
-            <div className={classes.root}>
-                <Grid container spacing={24}>
-                    <Grid item xs={9}>
-                        {showSearch === true ? (
 
 
-                            <div className={classes.main}>
-                                <SearchIcon className={classes.searchIcon} />
-                                <TextField
-                                    className={classes.searchText}
-                                    autoFocus={true}
-                                    onChange={this.handleSearchTextChange}
-                                    fullWidth={true}
-                                />
-                                <IconButton className={classes.clearIcon} onClick={this.hideSearch}>
-                                    <ClearIcon />
-                                </IconButton>
+                                        <IconButton variant="fab" aria-label="filter" className={classes.button}>
+                                            <FilterListIcon />
+                                        </IconButton>
+                                    </Grid>
+                                </Grid>
                             </div>
 
-
-
-                        ) : (<p>{title}</p>)}
-                    </Grid>
-                    <Grid item xs={3}>
-                        <IconButton variant="fab" aria-label="search" onClick={this.showSearchInput} className={classes.button}>
-                            <SearchIcon />
-                        </IconButton>
-                        <IconButton variant="fab" aria-label="download" className={classes.button}>
-                            <CloudDownloadIcon />
-                        </IconButton>
-                        <IconButton variant="fab" aria-label="search" className={classes.button}>
-                            <ViewColumnIcon />
-                        </IconButton>
-                        <IconButton variant="fab" aria-label="search" className={classes.button}>
-                            <FilterListIcon />
-                        </IconButton>
-                    </Grid>
-                </Grid>
-            </div>
-
-
-
-                        <Table className={classes.table}>
-                            <TableHead>
-                            <TableRow>
-                                <CustomTableCell>Id</CustomTableCell>
-                                <CustomTableCell numeric>Nombre</CustomTableCell>
-                                <CustomTableCell numeric>Precio</CustomTableCell>
-                                <CustomTableCell numeric>Ingrediente</CustomTableCell>
-                                <CustomTableCell numeric>Cantidad</CustomTableCell>
-                                <CustomTableCell numeric>Acciones</CustomTableCell>
-                            </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {displayData.map(product => (
-                                <Product key={product.id} product={product}></Product>
-                            ))}
-                            </TableBody>
-                        </Table>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                <TableRow>
+                                {columns.map(column => (
+                                    column.display ?
+                                    <CustomTableCell key={column.name}>{column.name}</CustomTableCell>
+                                    : false
+                                ))}
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                {displayData.map( (rowData, index) => (
+                                    <Product key={rowData.id} rowData={rowData} indexColumn={index} columns={columns}></Product>
+                                ))}
+                                </TableBody>
+                            </Table>
                         </Paper>
                     </Grid>
                 </Grid>

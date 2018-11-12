@@ -40,7 +40,14 @@ class Products extends Component {
     render() {
         const { classes, products } = this.props;
 
-        const columns = ["id","name","price","ingrediente","cantidad"];
+        const columns = [
+            {name:"id", display:true},
+            {name:"Nombre",display:true},
+            {name:"Precio",display:true},
+            {name:"Ingrediente",display:true},
+            {name:"Cantidad",display:true},
+            {name:"Acciones",display:false,filter:false, sort:false}
+        ];
         const options = [];
 
         return (
