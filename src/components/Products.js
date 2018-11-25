@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { allProducts } from '../actions/productsActions'; 
 import { compose } from 'redux';
-import { Link } from 'react-router-dom';
 import HUIDataTable from './HUIDataTable';
 
 //Material UI
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -41,7 +39,7 @@ class Products extends Component {
         const { classes, products } = this.props;
 
         const columns = [
-            {name:"id", display:true},
+            {name:"id", display:false},
             {name:"Nombre",display:true},
             {name:"Precio",display:true},
             {name:"Ingrediente",display:true},

@@ -15,7 +15,8 @@
           "name": "Nueces",
           "qty": 15
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 2,
@@ -32,7 +33,8 @@
           "name": "Levadura",
           "qty": 25
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 3,
@@ -49,7 +51,8 @@
           "name": "Harina",
           "qty": 20
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 4,
@@ -66,7 +69,8 @@
           "name": "Harina",
           "qty": 20
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 5,
@@ -88,7 +92,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 6,
@@ -110,7 +115,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 7,
@@ -132,7 +138,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 8,
@@ -154,7 +161,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 9,
@@ -176,7 +184,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id": 10,
@@ -198,7 +207,8 @@
           "name": "Fresa",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     },
     {
       "id":11,
@@ -220,7 +230,8 @@
           "name": "Banano",
           "qty": 2
         }
-      ]
+      ],
+      "actions": "nada"
     }
   ]
 }

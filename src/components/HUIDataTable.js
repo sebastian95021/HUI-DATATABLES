@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import TableFooter from '@material-ui/core/TableFooter';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -24,6 +25,13 @@ import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 const CustomTableCell = withStyles(theme => ({
     head: {
@@ -99,23 +107,38 @@ const styles = theme => ({
     typography: {
         margin: theme.spacing.unit * 2,
     },
+    pagination: {
+        flexShrink: 0,
+        color: theme.palette.text.secondary,
+        marginLeft: theme.spacing.unit * 2.5,
+      },
+    textFilter: {
+        backgroundColor: "#6f7071"
+    }
 });
 
 
 class HUIDataTable extends Component {
+
+    //Default Values
     static defaultProps = {
         title: ""
     };
 
+    //React State 
     state = {
-        rowsPerPage: 2,
+        rowsPerPage: 5,
+        textPagination: null,
+        page: 1,
         data: [],
         resultData: [],
         displayData: [],
         showSearch: false,
+        showFilters: false,
         generalSearchValue: null,
         rowsCount:0,
         columns: [],
+        visibleColumns:[],
         anchorEl: null
     }
 
@@ -136,16 +159,69 @@ class HUIDataTable extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.data !== prevProps.data) {
             const { data, columns } = this.props;
+            const { rowsPerPage, page } = this.state;
     
             //Total Rows
             const rowsCount = data.length;
+            const textPagination = "1-" + rowsPerPage*page + " de " + rowsCount;
     
             //Filter the amount of rows to display
-            const displayData = data.slice(0,this.state.rowsPerPage);
+            const displayData = data.slice(0,rowsPerPage);
+
+            //Push columns visibles in array
+            let visibleColumns = [];
+            for (let i = 0; i < columns.length; i++) {
+                if (columns[i]["display"])
+                    visibleColumns.push(i);
+            }
 
             //Set state initialize
-            this.setState({ data, displayData, rowsCount, columns});
+            this.setState({ data, displayData, rowsCount, columns, textPagination, visibleColumns});
         }
+    }
+
+    //Event Change rowsPerPage
+    handleChangeRowPerPage = event => {
+        const {data, page} = this.state;
+
+        const rowsPerPage = event.target.value;
+
+        this.changePagination(page, rowsPerPage);
+    }
+
+    //Event first, prev, next and last button pagination
+    Pagination = button => {
+        const {data, page, rowsCount, rowsPerPage} = this.state;
+
+        switch (button) {
+            case "first":
+                this.changePagination(1, rowsPerPage);
+                break;
+            case "prev":
+                this.changePagination(page - 1, rowsPerPage);
+                break;
+            case "next":
+                this.changePagination(page + 1, rowsPerPage);
+                break;
+            case "last":
+                this.changePagination( Math.ceil(rowsCount / rowsPerPage), rowsPerPage );
+                break;
+            default:
+                break;
+        }
+    }
+
+    //Execute changes in the pagination
+    changePagination = (page, rowsPerPage) => {
+        const {rowsCount, data} = this.state;
+
+        const pageLess = page - 1;
+        const since = pageLess * rowsPerPage;
+        const until = since + rowsPerPage;
+        const textPagination = (since===0 ? 1 : since) + "-" + (until>rowsCount ? rowsCount : until) + " de " + rowsCount;
+        const displayData = data.slice(since, until);
+
+        this.setState({ displayData, rowsPerPage, textPagination, page });
     }
 
     //Search matches rows 
@@ -179,16 +255,10 @@ class HUIDataTable extends Component {
                     if (found) break;
                 }
 
-                if (found)
-                    return true;
-                else
-                    return false;
+                return found;
             });
-        }else{
+        }else
             resultData = data;
-        }
-
-        console.log(resultData);
 
         //Filter the amount of rows to display
         const displayData = resultData.slice(0, rowsPerPage);
@@ -196,6 +266,29 @@ class HUIDataTable extends Component {
         //Set state
         this.setState({displayData, resultData});
     }
+
+    //Typing input search
+    handleSearchTextChange = e => {
+        const value = e.target.value;
+        this.setState({generalSearchValue: value});
+    }
+
+    //Change columns
+    handleColChange = index => event => {
+        let columns = Object.assign(this.state.columns);
+        columns[index].display = event.target.checked;
+
+        //Push columns visibles in array
+        let visibleColumns = [];
+        for (let i = 0; i < columns.length; i++) {
+            if (columns[i]["display"])
+                visibleColumns.push(i);
+        }
+
+        this.setState({ columns, visibleColumns });
+    }
+
+    // Functional Events
 
     //Hide input search
     hideSearch = () => {
@@ -207,28 +300,19 @@ class HUIDataTable extends Component {
         this.setState({showSearch: true});
     };
 
-    //Typing input search
-    handleSearchTextChange = e => {
-        const value = e.target.value;
-        this.setState({generalSearchValue: value});
-    }
-
+    //View Columns
     handleClickViewColumns = event => {
-        this.setState({
-          anchorEl: event.currentTarget,
-        });
+        this.setState({anchorEl: event.currentTarget});
     };
 
+    //Close view columns
     handleCloseViewColumns = () => {
-        this.setState({
-            anchorEl: null,
-        });
+        this.setState({anchorEl: null});
     };
 
-    handleColChange = index => event => {
-        let columns = Object.assign(this.state.columns);
-        columns[index].display = event.target.checked;
-        this.setState({ columns });
+    //Show/Hide filters advanced
+    handleShowFilters = () => {
+        this.setState({showFilters: !this.state.showFilters});
     }
 
     render() {
@@ -238,7 +322,13 @@ class HUIDataTable extends Component {
             displayData,
             showSearch,
             columns,
-            anchorEl
+            anchorEl,
+            rowsPerPage,
+            textPagination,
+            visibleColumns,
+            page,
+            rowsCount,
+            showFilters
         } = this.state;
 
         const open = Boolean(anchorEl);
@@ -321,8 +411,7 @@ class HUIDataTable extends Component {
                                         </Popover>
 
 
-
-                                        <IconButton variant="fab" aria-label="filter" className={classes.button}>
+                                        <IconButton variant="fab" aria-label="filter" onClick={this.handleShowFilters} className={classes.button}>
                                             <FilterListIcon />
                                         </IconButton>
                                     </Grid>
@@ -338,12 +427,63 @@ class HUIDataTable extends Component {
                                     : false
                                 ))}
                                 </TableRow>
+
+                                {showFilters === true ? 
+                                    (<TableRow>
+                                    {columns.map(column => (
+                                        column.display ?
+                                        <TableCell key={column.name}>
+                                        <div className={classes.main}>
+                                            <IconButton variant="fab" aria-label="filter" className={classes.button}>
+                                                a<span className={classes.textFilter}>b</span>c
+                                            </IconButton>
+                                            <TextField
+                                                id={"filter"+column.name}
+                                                className={classes.searchText}
+                                                margin="normal"
+                                            />
+                                        </div>
+                                        </TableCell>
+                                        : false
+                                        
+                                    ))}
+                                    </TableRow>)
+                                    : false
+                                }
+
+
                                 </TableHead>
                                 <TableBody>
-                                {displayData.map( (rowData, index) => (
-                                    <Product key={rowData.id} rowData={rowData} indexColumn={index} columns={columns}></Product>
+                                {displayData.map( rowData => (
+                                    <Product key={rowData.id} rowData={rowData} visibleColumns={visibleColumns}></Product>
                                 ))}
                                 </TableBody>
+
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell>{textPagination}</TableCell>
+                                        <TableCell colSpan={visibleColumns.length - 1} numeric>
+                                            <Select value={rowsPerPage} onChange={this.handleChangeRowPerPage}>
+                                                <MenuItem value={5}>5</MenuItem>
+                                                <MenuItem value={10}>10</MenuItem>
+                                                <MenuItem value={50}>50</MenuItem>
+                                                <MenuItem value={100}>100</MenuItem>
+                                            </Select>
+                                                    <IconButton disabled={page === 1} variant="fab" aria-label="search" onClick={() => this.Pagination("first")} className={classes.button}>
+                                                        <FirstPageIcon />
+                                                    </IconButton>
+                                                    <IconButton disabled={page === 1} variant="fab" aria-label="search" onClick={() => this.Pagination("prev")} className={classes.button}>
+                                                        <KeyboardArrowLeft />
+                                                    </IconButton>
+                                                    <IconButton disabled={page === Math.ceil(rowsCount / rowsPerPage)} variant="fab" aria-label="search" onClick={() => this.Pagination("next")} className={classes.button}>
+                                                        <KeyboardArrowRight />
+                                                    </IconButton>
+                                                    <IconButton disabled={page === Math.ceil(rowsCount / rowsPerPage)} variant="fab" aria-label="search" onClick={() => this.Pagination("last")} className={classes.button}>
+                                                        <LastPageIcon />
+                                                    </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableFooter>
                             </Table>
                         </Paper>
                     </Grid>

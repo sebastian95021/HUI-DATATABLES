@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { deleteProduct } from '../actions/productsActions';
@@ -7,9 +6,6 @@ import { deleteProduct } from '../actions/productsActions';
 //Material UI
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
 
 const CustomTableRow = withStyles(theme => ({
@@ -37,16 +33,34 @@ class Product extends Component {
     }
 
     render() {
-        const { indexColumn, columns, rowData } = this.props;
+        const { visibleColumns, rowData } = this.props;
         const classes = this.props.classes;
-        const rowspan = rowData.children.length;
+
+        let rowspan;
+        let children;
+        if (rowData.children !== undefined){
+            rowspan = rowData.children.length;
+            children = rowData['children'];
+        }else{
+            rowspan = 1;
+            children = [];
+        }
+
+        let cont = -1;
+        let rowspanPosition = null;
+
 
         return (
             <React.Fragment>
                 <CustomTableRow>
                     {Object.keys(rowData).map((key,i) => {
-                        if (key !== "children")
-                            return (<TableCell rowSpan={rowspan} key={i}>{rowData[key]}</TableCell>)
+                        if (key !== "children"){
+                            cont = cont + 1;
+                            if (visibleColumns.includes(cont))
+                                return (<TableCell rowSpan={rowspan} key={i}>{rowData[key]}</TableCell>)
+                            else
+                                return false;
+                        }
                         else{
                             return (
                                 <React.Fragment key={i}>
@@ -54,13 +68,12 @@ class Product extends Component {
                                         Object.keys(rowChildren).map((keyChildren,j) => {
                                             if (keyChildren === "id") return;
                                             if (index === 0){
-                                                return (<TableCell key={j}>{rowChildren[keyChildren]}</TableCell>)
-                                            }else{
-                                                return (
-                                                    <CustomTableRow key={j}>
-                                                        <TableCell>{rowChildren[keyChildren]}</TableCell>
-                                                    </CustomTableRow>
-                                                )
+                                                cont = cont + 1;
+                                                rowspanPosition = (rowspanPosition===null) ? cont : rowspanPosition;
+                                                if (visibleColumns.includes(cont))
+                                                    return (<TableCell key={j}>{rowChildren[keyChildren]}</TableCell>)
+                                                else
+                                                    return false;
                                             }
                                         })
                                     ))}
@@ -69,6 +82,24 @@ class Product extends Component {
                         }
                     })}
                 </CustomTableRow>
+
+                {children.map((rowChildren,index) => {
+                    if (index !== 0){
+                        cont = rowspanPosition - 1;
+                        return (
+                            <CustomTableRow key={index}>
+                            {Object.keys(rowChildren).map((keyChildren,j) => {
+                                if (keyChildren === "id") return;
+                                cont = cont + 1;
+                                if (visibleColumns.includes(cont))
+                                    return (<TableCell key={j}>{rowChildren[keyChildren]}</TableCell>)
+                                else
+                                    return false;
+                            })}
+                            </CustomTableRow>
+                        )
+                    }
+                })}
             </React.Fragment>
         );
     }
